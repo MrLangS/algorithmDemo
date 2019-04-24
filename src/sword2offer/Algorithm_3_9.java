@@ -1,10 +1,6 @@
 package sword2offer;
 
-import javax.swing.tree.TreeNode;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.Map;
-import java.util.Stack;
+import java.util.*;
 
 public class Algorithm_3_9 {
     /** 03
@@ -142,17 +138,36 @@ public class Algorithm_3_9 {
         }
     }
 
+
+    public class TreeNode {
+        int val;
+        TreeNode left;
+        TreeNode right;
+        TreeNode(int x) { val = x; }
+    }
+    // 缓存中序遍历数组每个值对应的索引
+    private Map<Integer, Integer> indexForInOrders = new HashMap<>();
     /** 07
      * 根据二叉树的前序遍历和中序遍历的结果，重建出该二叉树。假设输入的前序遍历和中序遍历的结果中都不含重复的数字。
      * @param pre
      * @param in
      * @return
      */
-    // 缓存中序遍历数组每个值对应的索引
-    private Map<Integer, Integer> indexForInOrders = new HashMap<>();
-
     public TreeNode reConstructBinaryTree(int[] pre, int[] in) {
+        for(int i = 0 ; i<in.length ; i++)
+            indexForInOrders.put(in[i],i);
+        return reConstructBinaryTree(pre, 0, pre.length-1, 0);
+    }
 
+    public TreeNode reConstructBinaryTree(int[] pre, int preL, int preR,int inL) {
+        if(preL > preR)
+            return null;
+        TreeNode root = new TreeNode(pre[preL]) ;
+        int inIndex = indexForInOrders.get(root.val);
+        int rootLeft = inIndex - inL ;
+        root.left = reConstructBinaryTree(pre , preL+1,preL+rootLeft,inL);
+        root.right= reConstructBinaryTree(pre ,preL+rootLeft+1,preR,inL + rootLeft+1);
+        return root;
     }
 
     /** 08
@@ -160,6 +175,23 @@ public class Algorithm_3_9 {
      * @param pNode
      * @return
      */
+    public TreeLinkNode GetNext(TreeLinkNode pNode) {
+        if(pNode.right != null){
+            TreeLinkNode node = pNode.right;
+            while(node.left != null)
+                node = node.left;
+            return node;
+        }else{
+            while(pNode.next != null){
+                TreeLinkNode parent = pNode.next;
+                if(parent.left == pNode)
+                    return parent;
+                pNode = pNode.next;
+            }
+
+        }
+        return null;
+    }
     public class TreeLinkNode {
 
         int val;
@@ -172,9 +204,6 @@ public class Algorithm_3_9 {
         }
     }
 
-    public TreeLinkNode GetNext(TreeLinkNode pNode) {
-
-    }
 
     /** 09
      * 用两个栈来实现一个队列，完成队列的 Push 和 Pop 操作。
