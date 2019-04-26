@@ -145,6 +145,203 @@ public class Algorithm_10_19 {
     private int[][] digitSum;
 
     public int movingCount(int threshold, int rows, int cols) {
+        this.rows = rows;
+        this.cols = cols;
+        this.threshold = threshold;
+        initDigitSum();
+        boolean[][] marked = new boolean[rows][cols];
 
+        return 0;
+    }
+
+    public void dfs(boolean[][] marked, int r, int c) {
+        if (r < 0 || r >= rows || c < 0 || c >= cols || marked[r][c])
+            return;
+        marked[r][c] = true;
+        if (digitSum[r][c] > threshold)
+            return;
+        cnt++;
+        for (int[] n : next) {
+            dfs(marked, r + n[0], r + n[1]);
+        }
+    }
+
+    public void initDigitSum() {
+        int[] cellDigitSum = new int[Math.max(rows, cols)];
+        for (int i = 0; i < cellDigitSum.length; i++) {
+            int n = i;
+            while (n > 0) {
+                cellDigitSum[i] += n % 10;
+                n /= 10;
+            }
+        }
+        this.digitSum = new int[rows][cols];
+        for (int i = 0; i < rows; i++)
+            for (int j = 0; j < cols; j++)
+                this.digitSum[i][j] = cellDigitSum[i] + cellDigitSum[j];
+
+    }
+
+    /** 14
+     * 把一根绳子剪成多段，并且使得每段的长度乘积最大。
+     * @param n
+     * @return
+     */
+    public int integerBreak(int n) {
+        if (n < 2)
+            return 0;
+        if (n == 2)
+            return 1;
+        if (n == 3)
+            return 2;
+        int timesOf3 = n / 3;
+        if (n - timesOf3 * 3 == 1)
+            timesOf3--;
+        int timesOf2 = (n - timesOf3 * 3) / 2;
+        return (int) (Math.pow(3, timesOf3)) * (int) (Math.pow(2, timesOf2));
+
+        //动态规划
+        /*
+        int[] dp = new int[n + 1];
+        dp[1] = 1;
+        for (int i = 2; i <= n; i++)
+            for (int j = 1; j < i; j++)
+                dp[i] = Math.max(dp[i], Math.max(j * (i - j), dp[j] * (i - j)));
+        return dp[n];*/
+    }
+
+    /** 15
+     * 输入一个整数，输出该数二进制表示中 1 的个数。
+     * @param n
+     * @return
+     */
+    public int NumberOf1(int n) {
+        int count = 0;
+        while (n != 0) {
+            count += 1;
+            n &= n - 1;
+        }
+        return count;
+        //return Integer.bitCount(n);
+    }
+
+    /** 16
+     * 给定一个 double 类型的浮点数 base 和 int 类型的整数 exponent，求 base 的 exponent 次方。
+     * @param base
+     * @param exponent
+     * @return
+     */
+    public double Power(double base, int exponent) {
+        if (exponent == 0)
+            return 1;
+        if (exponent == 1)
+            return base;
+        boolean isNegative = false;
+        if (exponent < 0) {
+            isNegative = true;
+            exponent = -exponent;
+        }
+
+        double pow = Power(base * base, exponent / 2);
+        if (exponent % 2 == 1)
+            pow = base * pow;
+        return isNegative ? 1 / pow : pow;
+    }
+
+    /** 17
+     * 输入数字 n，按顺序打印出从 1 到最大的 n 位十进制数。比如输入 3，则打印出 1、2、3 一直到最大的 3 位数即 999。
+     * @param n
+     */
+    public void print1ToMaxOfNDigits(int n) {
+        if(n<=0)
+            return;
+        char[] number = new char[n];
+        print1ToMaxOfNDigits(number,0);
+    }
+
+    private void print1ToMaxOfNDigits(char[] number, int digit) {
+        if (digit == number.length) {
+            printNumber(number);
+            return;
+        }
+
+        for (int i = 0; i < number.length; i++) {
+            number[i] = (char) (i + '0');
+            print1ToMaxOfNDigits(number, digit + 1);
+        }
+    }
+
+    private void printNumber(char[] number) {
+        int index = 0;
+        while (index < number.length && number[index] == '0')
+            index++;
+        while (index < number.length)
+            System.out.print(number[index++]);
+        System.out.println();
+    }
+
+    /** 18.1
+     * 在 O(1) 时间内删除链表节点
+     * @param head
+     * @param tobeDelete
+     * @return
+     */
+    public ListNode deleteNode(ListNode head, ListNode tobeDelete) {
+        if (head == null || tobeDelete == null)
+            return null;
+
+        if (tobeDelete.next != null) {
+            ListNode next = tobeDelete.next;
+            tobeDelete.val = next.val;
+            tobeDelete.next = next.next;
+        } else {
+            if (head == tobeDelete) {
+                return null;
+            } else {
+                ListNode cur = head;
+                while (cur.next != tobeDelete)
+                    cur = cur.next;
+                cur.next = null;
+            }
+        }
+        return head;
+    }
+
+    public class ListNode {
+        int val;
+        ListNode next = null;
+
+        ListNode(int val) {
+            this.val = val;
+        }
+    }
+
+    /** 18.2
+     * 在一个排序的链表中，存在重复的结点，请删除该链表中重复的结点，重复的结点不保留，返回链表头指针
+     * @param pHead
+     * @return
+     */
+    public ListNode deleteDuplication(ListNode pHead) {
+        if(pHead == null || pHead.next == null)
+            return pHead;
+        ListNode next = pHead.next;
+        if(pHead.val == next.val){
+            while (next != null && pHead.val == next.val)
+                next = next.next;
+            return deleteDuplication(next);
+        }else {
+            pHead.next = deleteDuplication(pHead.next);
+            return pHead;
+        }
+    }
+
+    /** 19
+     * 请实现一个函数用来匹配包括 '.' 和 '*' 的正则表达式。模式中的字符 '.' 表示任意一个字符，而 '*' 表示它前面的字符可以出现任意次（包含 0 次）。
+     * @param str
+     * @param pattern
+     * @return
+     */
+    public boolean match(char[] str, char[] pattern) {
+        return false;
     }
 }
