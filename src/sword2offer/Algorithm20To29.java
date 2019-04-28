@@ -2,7 +2,7 @@ package sword2offer;
 
 import java.util.ArrayList;
 
-public class Algorithm_20_29 {
+public class Algorithm20To29 {
 
     /** 20
      * 表示数值的字符串

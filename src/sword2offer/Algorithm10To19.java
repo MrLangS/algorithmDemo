@@ -1,6 +1,6 @@
 package sword2offer;
 
-public class Algorithm_10_19 {
+public class Algorithm10To19 {
     /**
      * 10
      * 求斐波那契数列的第 n 项，n <= 39。
