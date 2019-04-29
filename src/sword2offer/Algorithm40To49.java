@@ -90,18 +90,24 @@ public class Algorithm40To49 {
         return new ArrayList<>(maxHeap);
     }
 
-    /** 大顶堆，存储左半边元素 */
+    /**
+     * 大顶堆，存储左半边元素
+     */
     private PriorityQueue<Integer> left = new PriorityQueue<>((o1, o2) -> o2 - o1);
-    /** 小顶堆，存储右半边元素，并且右半边元素都大于左半边 */
+    /**
+     * 小顶堆，存储右半边元素，并且右半边元素都大于左半边
+     */
     private PriorityQueue<Integer> right = new PriorityQueue<>();
-    /** 当前数据流读入的元素个数 */
+    /**
+     * 当前数据流读入的元素个数
+     */
     private int n = 0;
     /** 41.1
      * 数据流中的中位数
      * @return
      */
-    public void Insert(Integer num) {
-        if(n % 2 == 0) {
+    public void insert(Integer num) {
+        if (n % 2 == 0) {
             left.add(num);
             right.add(left.poll());
         } else {
@@ -111,8 +117,8 @@ public class Algorithm40To49 {
         n++;
     }
 
-    public Double GetMedian() {
-        return (double)(n%2 == 0 ? (left.peek()+right.peek())/2 : right.peek());
+    public Double getMedian() {
+        return (double) (n % 2 == 0 ? (left.peek() + right.peek()) / 2 : right.peek());
     }
 
     private int[] cnts = new int[256];
@@ -121,7 +127,7 @@ public class Algorithm40To49 {
      * 字符流中第一个不重复的字符
      * @param ch
      */
-    public void Insert(char ch) {
+    public void insert(char ch) {
         cnts[ch]++;
         queue.add(ch);
         while (!queue.isEmpty() && cnts[queue.peek()] > 1) {
@@ -129,7 +135,7 @@ public class Algorithm40To49 {
         }
     }
 
-    public char FirstAppearingOnce() {
+    public char firstAppearingOnce() {
         return queue.isEmpty() ? '#' : queue.peek();
     }
 }
