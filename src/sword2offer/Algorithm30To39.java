@@ -2,6 +2,12 @@ package sword2offer;
 
 import java.util.*;
 
+/**
+ * Algorithm40To49
+ * 剑指 30~39
+ * @author lang
+ * @date 2019-04-29
+ */
 public class Algorithm30To39 {
     /** 30
      * 定义栈的数据结构，请在该类型中实现一个能够得到栈中所含最小元素的min函数（时间复杂度应为O（1））。
