@@ -199,8 +199,33 @@ public class Algorithm30To39 {
      * @param pHead
      * @return
      */
-    public RandomListNode Clone(RandomListNode pHead) {
-
+    public RandomListNode clone(RandomListNode pHead) {
+        //插入新节点
+        RandomListNode cur = pHead;
+        while (cur != null) {
+            RandomListNode clone = new RandomListNode(cur.label);
+            clone.next = cur.next;
+            cur.next = clone;
+            cur = clone.next;
+        }
+        //建立random链接
+        cur = pHead;
+        while (cur != null) {
+            RandomListNode clone = cur.next;
+            if (cur.random != null) {
+                clone.random = cur.random.next;
+            }
+            cur = clone.next;
+        }
+        //拆分节点
+        cur = pHead;
+        RandomListNode cloneHead = cur.next;
+        while (cur.next != null) {
+            RandomListNode next = cur.next;
+            cur.next = next.next;
+            cur = next;
+        }
+        return cloneHead;
     }
 
     public class RandomListNode {
@@ -212,4 +237,127 @@ public class Algorithm30To39 {
             this.label = label;
         }
     }
+
+    private TreeNode pre = null;
+    private TreeNode head = null;
+    /** 36
+     * 输入一棵二叉搜索树，将该二叉搜索树转换成一个排序的双向链表。要求不能创建任何新的结点，只能调整树中结点指针的指向。
+     * @param root
+     * @return
+     */
+    public TreeNode convert(TreeNode root) {
+        inOrder(root);
+        return head;
+    }
+
+    public void inOrder(TreeNode node) {
+        if (node == null) {
+            return;
+        }
+        inOrder(node.left);
+        node.left = pre;
+        if (pre != null) {
+            pre.right = node;
+        }
+        if (head == null) {
+            head = node;
+        }
+        pre = node;
+        inOrder(node.right);
+    }
+
+    private String deserializeStr;
+    /** 37
+     * 请实现两个函数，分别用来序列化和反序列化二叉树。
+     * @param root
+     * @return
+     */
+    public String serialize(TreeNode root) {
+        if (root == null){
+            return "#";
+        }
+        return root.val + " " + serialize(root.left) + " " + serialize(root.right);
+    }
+
+    public TreeNode Deserialize(String str) {
+        deserializeStr = str;
+        return deSerialize();
+    }
+
+    public TreeNode deSerialize() {
+        String key = "#";
+        if(deserializeStr.length() == 0){
+            return null;
+        }
+        int index = deserializeStr.indexOf(" ");
+        String node = index == -1 ? deserializeStr : deserializeStr.substring(0,index);
+        deserializeStr = index == -1 ? "" : deserializeStr.substring(index+1);
+        if( node.equals(key)){
+            return null;
+        }
+        TreeNode t = new TreeNode(Integer.valueOf(node));
+        t.left = deSerialize();
+        t.right = deSerialize();
+        return t;
+    }
+
+    private ArrayList<String> arrList = new ArrayList<>();
+    /** 38
+     * 输入一个字符串，按字典序打印出该字符串中字符的所有排列。例如输入字符串 abc，
+     * 则打印出由字符 a, b, c 所能排列出来的所有字符串 abc, acb, bac, bca, cab 和 cba。
+     * @param str
+     * @return
+     */
+    public ArrayList<String> permutation(String str) {
+        if (str.length() == 0) {
+            return null;
+        }
+        char[] chars = str.toCharArray();
+        Arrays.sort(chars);
+        backtracking(chars, new boolean[chars.length], new StringBuilder());
+        return arrList;
+    }
+    private void backtracking(char[] chars, boolean[] hasUsed, StringBuilder s) {
+        if (s.length() == chars.length) {
+            arrList.add(s.toString());
+            return;
+        }
+        for (int i = 0; i < chars.length; i++) {
+            if (hasUsed[i]) {
+                continue;
+            }
+            if (i != 0 && chars[i] == chars[i - 1] && !hasUsed[i - 1]) {
+                continue;
+            }
+            s.append(chars[i]);
+            hasUsed[i] = true;
+            backtracking(chars, hasUsed, s);
+            s.deleteCharAt(s.length() - 1);
+            hasUsed[i] = false;
+        }
+    }
+
+    /** 39
+     * 数组中出现次数超过一半的数字
+     * @param nums
+     * @return
+     */
+    public int MoreThanHalfNum_Solution(int[] nums) {
+        int majority = nums[0];
+        for (int i = 1, cnt = 1; i < nums.length; i++) {
+            cnt = majority == nums[i] ? cnt + 1 : cnt - 1;
+            if (cnt == 0) {
+                majority = nums[i];
+                cnt = 1;
+            }
+        }
+        int cnt = 0;
+        for (int val : nums) {
+            if (majority == val) {
+                cnt++;
+            }
+        }
+        return cnt > nums.length / 2 ? majority : 0;
+    }
+
 }
