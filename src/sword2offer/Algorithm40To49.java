@@ -138,4 +138,40 @@ public class Algorithm40To49 {
     public char firstAppearingOnce() {
         return queue.isEmpty() ? '#' : queue.peek();
     }
+
+    /** 42
+     * 连续子数组的最大和
+     * @param nums
+     * @return
+     */
+    public int findGreatestSumOfSubArray(int[] nums) {
+        if (nums == null || nums.length == 0){
+            return 0;
+        }
+        int greatestSum = Integer.MIN_VALUE;
+        int sum = 0;
+        for (int val : nums) {
+            sum = sum <= 0 ? val : sum + val;
+            greatestSum = Math.max(greatestSum, sum);
+        }
+        return greatestSum;
+    }
+
+    /** 43
+     * 从 1 到 n 整数中 1 出现的次数
+     * @param n
+     * @return
+     */
+    public int numberOf1Between1AndN_Solution(int n) {
+        int cnt = 0;
+        for (int m = 1; m <= n; m *= 10) {
+            int a = n / m, b = n % m;
+            cnt += (a + 8) / 10 * m + (a % 10 == 1 ? b + 1 : 0);
+        }
+        return cnt;
+    }
+
+    public static void main(String[] args) {
+        Algorithm40To49 test = new Algorithm40To49();
+    }
 }
