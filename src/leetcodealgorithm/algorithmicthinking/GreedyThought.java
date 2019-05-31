@@ -204,4 +204,59 @@ public class GreedyThought {
         }
         return true;
     }
+
+    /**
+     * 665. Non-decreasing Array (Easy)
+     * 修改一个数成为非递减数组
+     *
+     * @param nums
+     * @return
+     */
+    public boolean checkPossibility(int[] nums) {
+        int cnt = 0;
+        int tag = 2;
+        for (int i = 1; i < nums.length && cnt < tag; i++) {
+            if (nums[i] >= nums[i - 1]) {
+                continue;
+            }
+            cnt++;
+            if (i - 2 >= 0 && nums[i - 2] > nums[i]) {
+                nums[i] = nums[i - 1];
+            } else {
+                nums[i - 1] = nums[i];
+            }
+        }
+        return cnt <= 1;
+    }
+
+    /**
+     * 53. Maximum Subarray (Easy)
+     * 子数组最大的和
+     *
+     * @param nums
+     * @return
+     */
+    public int maxSubArray(int[] nums) {
+        if (nums == null || nums.length == 0) {
+            return 0;
+        }
+        int preSum = nums[0];
+        int maxSum = preSum;
+        for (int i = 1; i < nums.length; i++) {
+            preSum = preSum > 0 ? preSum+nums[i] : nums[i];
+            maxSum = Math.max(preSum,maxSum);
+        }
+        return maxSum;
+    }
+
+    /**
+     * 763. Partition Labels (Medium)
+     * 分隔字符串使同种字符出现在一起
+     *
+     * @param S
+     * @return
+     */
+    public List<Integer> partitionLabels(String S) {
+
+    }
 }
