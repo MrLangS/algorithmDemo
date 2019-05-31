@@ -243,8 +243,8 @@ public class GreedyThought {
         int preSum = nums[0];
         int maxSum = preSum;
         for (int i = 1; i < nums.length; i++) {
-            preSum = preSum > 0 ? preSum+nums[i] : nums[i];
-            maxSum = Math.max(preSum,maxSum);
+            preSum = preSum > 0 ? preSum + nums[i] : nums[i];
+            maxSum = Math.max(preSum, maxSum);
         }
         return maxSum;
     }
@@ -253,10 +253,33 @@ public class GreedyThought {
      * 763. Partition Labels (Medium)
      * 分隔字符串使同种字符出现在一起
      *
-     * @param S
+     * @param s
      * @return
      */
-    public List<Integer> partitionLabels(String S) {
+    public List<Integer> partitionLabels(String s) {
+        int[] lastIndexOfChar = new int[26];
+        for (int i = 0; i < s.length(); i++) {
+            lastIndexOfChar[char2Index(s.charAt(i))] = i;
+        }
+        List<Integer> partitions = new ArrayList<>();
+        int firstIndex = 0;
+        while (firstIndex < s.length()) {
+            int lastIndex = firstIndex;
+            for (int i = firstIndex; i < s.length() && i <= lastIndex; i++) {
+                int index = lastIndexOfChar[char2Index(s.charAt(i))];
+                if (index > lastIndex) {
+                    lastIndex = index;
+                }
+            }
+            partitions.add(lastIndex - firstIndex + 1);
+            firstIndex = lastIndex + 1;
+        }
 
+        return partitions;
     }
+
+    private int char2Index(char c) {
+        return c - 'a';
+    }
+
 }
